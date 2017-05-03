@@ -1,0 +1,3 @@
+apple,1,90000
+banana,2,100
+watermelon,90
