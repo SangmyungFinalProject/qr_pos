@@ -1,0 +1,7 @@
+Apple,20,1000
+Banana,5,2800
+Watermelon,3,15000
+Orange,53,2300
+Tomato,42,700 
+Strawberry,6,3000
+Persimmon,32,4000
