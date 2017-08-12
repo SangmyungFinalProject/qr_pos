@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_WIDGETS_LIB -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -std=gnu++14 -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I../qt_test -I-I/usr/include -I-I/usr/local/include -isystem /usr/include/arm-linux-gnueabihf/qt5 -isystem /usr/include/arm-linux-gnueabihf/qt5/QtWidgets -isystem /usr/include/arm-linux-gnueabihf/qt5/QtNetwork -isystem /usr/include/arm-linux-gnueabihf/qt5/QtGui -isystem /usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I. -I.
+INCPATH       = -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I../qt_test -I-I/usr/include -I-I/usr/local/include -isystem /usr/include/arm-linux-gnueabihf/qt5 -isystem /usr/include/arm-linux-gnueabihf/qt5/QtWidgets -isystem /usr/include/arm-linux-gnueabihf/qt5/QtSql -isystem /usr/include/arm-linux-gnueabihf/qt5/QtNetwork -isystem /usr/include/arm-linux-gnueabihf/qt5/QtGui -isystem /usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I. -I.
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) -L/usr/lib -lopencv_core -lopencv_highgui -lopencv_videoio -lopencv_imgproc -L/usr/local/lib -lzbar -lQt5Widgets -lQt5Network -lQt5Gui -lQt5Core -lGLESv2 -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/lib -lopencv_core -lopencv_highgui -lopencv_videoio -lopencv_imgproc -L/usr/local/lib -lzbar -lQt5Widgets -lQt5Sql -lQt5Network -lQt5Gui -lQt5Core -lGLESv2 -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/arm-linux-gnueabihf/qt5/bin/qmake
@@ -49,13 +49,15 @@ SOURCES       = ../qt_test/main.cpp \
 		../qt_test/qt_test.cpp \
 		../qt_test/fileio.cpp \
 		../qt_test/qr_scan.cpp \
-		../qt_test/send_request.cpp qrc_qt_test.cpp \
+		../qt_test/send_request.cpp \
+		../qt_test/DB_Connection.cpp qrc_qt_test.cpp \
 		moc_qt_test.cpp
 OBJECTS       = main.o \
 		qt_test.o \
 		fileio.o \
 		qr_scan.o \
 		send_request.o \
+		DB_Connection.o \
 		qrc_qt_test.o \
 		moc_qt_test.o
 DIST          = /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
@@ -124,7 +126,8 @@ DIST          = /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
 		../qt_test/qt_test.cpp \
 		../qt_test/fileio.cpp \
 		../qt_test/qr_scan.cpp \
-		../qt_test/send_request.cpp
+		../qt_test/send_request.cpp \
+		../qt_test/DB_Connection.cpp
 QMAKE_TARGET  = qt_test
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = qt_test
@@ -224,6 +227,7 @@ Makefile: ../qt_test/qt_test.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-
 		/usr/lib/arm-linux-gnueabihf/libQt5Widgets.prl \
 		/usr/lib/arm-linux-gnueabihf/libQt5Gui.prl \
 		/usr/lib/arm-linux-gnueabihf/libQt5Core.prl \
+		/usr/lib/arm-linux-gnueabihf/libQt5Sql.prl \
 		/usr/lib/arm-linux-gnueabihf/libQt5Network.prl
 	$(QMAKE) -spec linux-g++ CONFIG+=debug -o Makefile ../qt_test/qt_test.pro
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf:
@@ -293,6 +297,7 @@ Makefile: ../qt_test/qt_test.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-
 /usr/lib/arm-linux-gnueabihf/libQt5Widgets.prl:
 /usr/lib/arm-linux-gnueabihf/libQt5Gui.prl:
 /usr/lib/arm-linux-gnueabihf/libQt5Core.prl:
+/usr/lib/arm-linux-gnueabihf/libQt5Sql.prl:
 /usr/lib/arm-linux-gnueabihf/libQt5Network.prl:
 qmake: FORCE
 	@$(QMAKE) -spec linux-g++ CONFIG+=debug -o Makefile ../qt_test/qt_test.pro
@@ -301,7 +306,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/qt_test1.0.0 || mkdir -p .tmp/qt_test1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.qrc .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.h .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/main.cpp ../qt_test/qt_test.cpp ../qt_test/fileio.cpp ../qt_test/qr_scan.cpp ../qt_test/send_request.cpp .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.ui .tmp/qt_test1.0.0/ && (cd `dirname .tmp/qt_test1.0.0` && $(TAR) qt_test1.0.0.tar qt_test1.0.0 && $(COMPRESS) qt_test1.0.0.tar) && $(MOVE) `dirname .tmp/qt_test1.0.0`/qt_test1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/qt_test1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.qrc .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.h .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/main.cpp ../qt_test/qt_test.cpp ../qt_test/fileio.cpp ../qt_test/qr_scan.cpp ../qt_test/send_request.cpp ../qt_test/DB_Connection.cpp .tmp/qt_test1.0.0/ && $(COPY_FILE) --parents ../qt_test/qt_test.ui .tmp/qt_test1.0.0/ && (cd `dirname .tmp/qt_test1.0.0` && $(TAR) qt_test1.0.0.tar qt_test1.0.0 && $(COMPRESS) qt_test1.0.0.tar) && $(MOVE) `dirname .tmp/qt_test1.0.0`/qt_test1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/qt_test1.0.0
 
 
 clean:compiler_clean 
@@ -333,7 +338,7 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_qt_test.cpp
 moc_qt_test.cpp: ui_qt_test.h \
 		../qt_test/qt_test.h
-	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/Desktop/qt/qt_test -I/home/pi/Desktop/qt/qt_test/-I/usr/include -I/home/pi/Desktop/qt/qt_test/-I/usr/local/include -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/4.9 -I/usr/include/arm-linux-gnueabihf/c++/4.9 -I/usr/include/c++/4.9/backward -I/usr/lib/gcc/arm-linux-gnueabihf/4.9/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/4.9/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../qt_test/qt_test.h -o moc_qt_test.cpp
+	/usr/lib/arm-linux-gnueabihf/qt5/bin/moc $(DEFINES) -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++ -I/home/pi/Desktop/qt/qt_test -I/home/pi/Desktop/qt/qt_test/-I/usr/include -I/home/pi/Desktop/qt/qt_test/-I/usr/local/include -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtWidgets -I/usr/include/arm-linux-gnueabihf/qt5/QtSql -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtGui -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/include/c++/4.9 -I/usr/include/arm-linux-gnueabihf/c++/4.9 -I/usr/include/c++/4.9/backward -I/usr/lib/gcc/arm-linux-gnueabihf/4.9/include -I/usr/local/include -I/usr/lib/gcc/arm-linux-gnueabihf/4.9/include-fixed -I/usr/include/arm-linux-gnueabihf -I/usr/include ../qt_test/qt_test.h -o moc_qt_test.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -372,6 +377,10 @@ qr_scan.o: ../qt_test/qr_scan.cpp ../qt_test/qt_test.h \
 send_request.o: ../qt_test/send_request.cpp ../qt_test/qt_test.h \
 		ui_qt_test.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o send_request.o ../qt_test/send_request.cpp
+
+DB_Connection.o: ../qt_test/DB_Connection.cpp ../qt_test/qt_test.h \
+		ui_qt_test.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o DB_Connection.o ../qt_test/DB_Connection.cpp
 
 qrc_qt_test.o: qrc_qt_test.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_qt_test.o qrc_qt_test.cpp

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network sql
 #CONFIG   += c++14
 QMAKE_CXXFLAGS += -std=gnu++14
 #QMAKE_LFLAGS += -std=c++11
@@ -35,7 +35,8 @@ SOURCES += main.cpp\
         qt_test.cpp \
     fileio.cpp \
     qr_scan.cpp \
-    send_request.cpp
+    send_request.cpp \
+    DB_Connection.cpp
 
 HEADERS  += qt_test.h
 

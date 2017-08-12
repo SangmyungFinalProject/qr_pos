@@ -32,6 +32,9 @@
 #include <QUrlQuery>
 #include <unistd.h>
 #include <QThread>
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 using namespace cv;
 using namespace std;
@@ -107,5 +110,7 @@ string current_time();
 void sep_qr_price();
 QString dlsplay_success_log();
 void save_JSON_format();
+
+void DB_connect();
 
 #endif // QT_TEST_H

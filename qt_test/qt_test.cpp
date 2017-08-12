@@ -14,6 +14,7 @@ qt_test::qt_test(QWidget *parent)
 
     set_menu(ui);
     set_table();    //표 세팅
+    DB_connect();
 }
 
 //set_menu(Ui::qt_testClass ui)      //
