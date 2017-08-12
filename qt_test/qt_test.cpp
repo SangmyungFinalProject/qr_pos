@@ -172,6 +172,10 @@ void qt_test::input_item(QPushButton *button){
 //설명 : +버튼 누를 시 해당 row의 갯수와 금액을 증가시키는 slot 함수//
 void qt_test::on_qty_up_button_pressed()
 {
+    if (isTableSelect() == false) {
+        return;
+    }
+
     int row = ui.sel_item_table->currentRow();  //현재 선택된 row 저장
     QString str= ui.sel_item_table->item(row, 0)->text();   //그 row의 물품명도 저장
 
@@ -266,6 +270,8 @@ void qt_test::on_change_qty_button_clicked()
         QLineEdit *line_edit = new QLineEdit(); //변경 값 입력받을 line_edit 선언
         QPushButton *button = new QPushButton("&set");  //입력 끝나고 누를 버튼 선언
 
+        line_edit->setValidator(new QIntValidator(0, 100, this));
+
         //레이아웃에 라벨, 라인에딧, 버튼 순으로 담기
         layout->addWidget(label);
         layout->addWidget(line_edit);
@@ -280,6 +286,29 @@ void qt_test::on_change_qty_button_clicked()
         connect(button, &QPushButton::clicked, [=]{set_qty(change_qty, line_edit, row);});  //버튼이 눌렸을 때 해당 row의 값을 변경 할 슬롯 함수로 connect
 
     }
+}
+
+
+void qt_test::on_cancel_pay_button_clicked()
+{
+    QWidget *cancel_pay = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout;
+    QLabel *label = new QLabel("Input pay No.");
+    QLineEdit *line_edit = new QLineEdit();
+    QPushButton *button = new QPushButton("OK");
+
+    line_edit->setValidator(new QIntValidator(0, 100, this));
+
+    layout->addWidget(label);
+    layout->addWidget(line_edit);
+    layout->addWidget(button);
+
+    cancel_pay->setLayout(layout);
+
+    cancel_pay->show();
+
+    connect(button, &QPushButton::clicked, [=]{transfer_cancel_pay_no(cancel_pay, line_edit);});
+
 }
 
 //set_qty(QWidget *change_qty, QLineEdit *line_edit, int row)//
@@ -299,8 +328,17 @@ void qt_test::set_qty(QWidget *change_qty, QLineEdit *line_edit, int row){
     change_qty->close();    //change_gty 위젯 닫기
 
 }
+//transfer_cancel_pay_no(QWidget *cancel_pay, QLineEdit * line_edit)//
+//input the pay_id and call cancel_post_request() func              //
+void qt_test::transfer_cancel_pay_no(QWidget *cancel_pay, QLineEdit * line_edit)
+{
+    qDebug("Enter pay no. checker");
+    QString cancel_pay_no = line_edit->text();
+    cancel_pay->close();
+    qDebug("input finish");
 
-
+    cancel_post_request(cancel_pay_no);
+}
 
 //display_ammount_price()                            //
 //설명 : 금액 표시 라벨에 표에 있는 물품 총 금액을 반영한다.//
@@ -353,6 +391,12 @@ void qt_test::minus_table_price(int row){
     display_ammount_price();    //그 뒤 결과를 반영한다.
 }
 
+//isTableSelect()//
+//is table selected??//
+bool qt_test::isTableSelect()
+{
+    return ui.sel_item_table->currentItem() > 0;
+}
 
 qt_test::~qt_test()
 {
@@ -360,3 +404,5 @@ qt_test::~qt_test()
     free(I_list[1]);
     free(I_list[2]);
 }
+
+

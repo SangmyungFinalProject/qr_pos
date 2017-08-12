@@ -82,8 +82,11 @@ private slots:
     void on_qty_down_button_clicked();
     void on_del_item_button_clicked();
     void on_change_qty_button_clicked();
+    void on_cancel_pay_button_clicked();
 
     void set_qty(QWidget *change_qty, QLineEdit *line_edit, int row);
+    void transfer_cancel_pay_no(QWidget *cancel_pay, QLineEdit * line_edit);
+    bool isTableSelect();
 
 private:
     Ui::qt_testClass ui;
@@ -99,6 +102,7 @@ public:
 int qr_scan();
 void getRequest();
 QString postRequest();
+QString cancel_post_request(QString cancel_pay_no);
 string current_time();
 void sep_qr_price();
 QString dlsplay_success_log();

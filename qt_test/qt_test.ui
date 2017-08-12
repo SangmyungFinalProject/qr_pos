@@ -166,7 +166,7 @@
       <string>-</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_5">
+    <widget class="QPushButton" name="cancel_pay_button">
      <property name="geometry">
       <rect>
        <x>310</x>
@@ -175,8 +175,13 @@
        <height>80</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string/>
+      <string>결제 삭제</string>
      </property>
     </widget>
     <widget class="QPushButton" name="qty_up_button">

@@ -31,6 +31,7 @@ void getRequest(){
     }
 }
 
+/*
 //postRequest()                                    //
 //설명 : 서버로 읽은 QR Code와 결제 금액 정보를 post한다//
 QString postRequest(){
@@ -62,6 +63,88 @@ QString postRequest(){
     if (rep->error() == QNetworkReply::NoError) {   //에러가 발생하지 않았다면 성공
         //success
         qDebug() << "Success" <<rep->readAll(); //로그에 리퀘스트 찍고
+        delete rep; //리퀘스트 삭제
+
+        return dlsplay_success_log();   //화면에 성공 창을 띄운다.
+    }
+    else {
+        //failure
+        qDebug() << "Failure" <<rep->errorString(); //로그에 실패 띄우고
+        delete rep; //리퀘스트 삭제
+
+        return "";
+    }
+}
+*/
+//test code
+QString postRequest(){
+
+    QEventLoop eventLoop;   //이벤트 루프 생성
+
+    QNetworkAccessManager mgr;  //NetworkAccessManager 선언
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit())); //연결이 끝나면 종료함수가 실행되도록 connect
+
+    QNetworkRequest req(QUrl("http://wearhouse.azurewebsites.net/pay"));    //결제 서버의 주소 입력
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded"); //requset의 헤더 선언
+
+
+    QUrlQuery q;    //쿼리문을 저장할 q 선언
+
+    //q.addQueryItem("number",qp.card_no);    //카드 정보를 q에 넣는다
+    //q.addQueryItem("cvc", qp.cvc);  //cvc 정보를 q에 넣는다.
+    q.addQueryItem("price",QString::number(qp.price));  //결제 금액을 q에 넣는다.
+    //q.addQueryItem("time",qp.time); //현재 시간을 q에 넣는다.
+    //q.addQueryItem("company",qp.company);   //카드 회사 정보를 q에 넣는다.
+
+    QByteArray data;    //QUrlQuery를 담을 QByteArray 선언
+
+    data.append(q.query()); //q를 쿼리로써 담고
+    QString qr_data = QString::fromStdString(qr_code_str);
+    data.append(qr_data);
+    qDebug(data);
+    QNetworkReply *rep = mgr.post(req,data);    //서버로 data를 POST
+
+    eventLoop.exec();
+    if (rep->error() == QNetworkReply::NoError) {   //에러가 발생하지 않았다면 성공
+        //success
+        qDebug() << "Success" <<rep->readAll(); //로그에 리퀘스트 찍고
+        delete rep; //리퀘스트 삭제
+
+        return dlsplay_success_log();   //화면에 성공 창을 띄운다.
+    }
+    else {
+        //failure
+        qDebug() << "Failure" <<rep->errorString(); //로그에 실패 띄우고
+        delete rep; //리퀘스트 삭제
+
+        return "";
+    }
+}
+
+QString cancel_post_request(QString cancel_pay_no)
+{
+    QEventLoop eventLoop;   //이벤트 루프 생성
+
+    QNetworkAccessManager mgr;  //NetworkAccessManager 선언
+    QObject::connect(&mgr, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit())); //연결이 끝나면 종료함수가 실행되도록 connect
+
+    QNetworkRequest req(QUrl("http://wearhouse.azurewebsites.net/pay/cancel"));    //결제 서버의 주소 입력
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded"); //requset의 헤더 선언
+
+    QUrlQuery q;
+
+    q.addQueryItem("pay_id", cancel_pay_no);
+
+    QByteArray data;
+    data.append(q.query());
+    qDebug(data);
+
+    QNetworkReply *rep = mgr.post(req,data);
+
+    eventLoop.exec();
+    if (rep->error() == QNetworkReply::NoError) {   //에러가 발생하지 않았다면 성공
+        //success
+        qDebug() << "Cancel Success" <<rep->readAll(); //로그에 리퀘스트 찍고
         delete rep; //리퀘스트 삭제
 
         return dlsplay_success_log();   //화면에 성공 창을 띄운다.

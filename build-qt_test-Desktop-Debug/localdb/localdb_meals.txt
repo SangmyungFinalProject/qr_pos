@@ -1,0 +1,7 @@
+onion soup,20,3500
+clam chowder,17,4500
+potato chips,28,2000
+Pork Chop,7,6000
+Chicken Sandwich,5,3500
+fried rice,4,5000
+scrambled egg,8,1500
