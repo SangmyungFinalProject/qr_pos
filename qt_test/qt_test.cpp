@@ -10,11 +10,11 @@ extern string qr_code_str;
 qt_test::qt_test(QWidget *parent)
     : QMainWindow(parent)
 {
+    DB_connect();
     ui.setupUi(this);
 
     set_menu(ui);
     set_table();    //표 세팅
-    DB_connect();
 }
 
 //set_menu(Ui::qt_testClass ui)      //
@@ -31,9 +31,13 @@ void qt_test::set_menu(Ui::qt_testClass ui){
    QWidget *menu3 = new QWidget;
 
    //세부 메뉴들 초기화
-   put_item(menu1, "/home/pi/Desktop/qt/qt_test/localdb_fruits.txt");
-   put_item(menu2, "/home/pi/Desktop/qt/qt_test/localdb_drinks.txt");
-   put_item(menu3, "/home/pi/Desktop/qt/qt_test/localdb_meals.txt");
+   //put_item(menu1, "/home/pi/Desktop/qt/qt_test/localdb_fruits.txt");
+   //put_item(menu2, "/home/pi/Desktop/qt/qt_test/localdb_drinks.txt");
+   //put_item(menu3, "/home/pi/Desktop/qt/qt_test/localdb_meals.txt");
+
+   put_item(menu1,1);
+   put_item(menu2,2);
+   put_item(menu3,3);
 
    //ui의 item_stackedWidget에 초기화한 세부 메뉴들 등록
    ui.item_stackedWidget->addWidget(menu1);
@@ -59,17 +63,18 @@ void qt_test::set_menu(Ui::qt_testClass ui){
 
 //put_item(QWidget *Widget, QString location)//
 //설명 : 세부 메뉴 초기화 하는 함수              //
-void qt_test::put_item(QWidget *Widget, QString location){
+void qt_test::put_item(QWidget *Widget,int num){
     QGridLayout *layout = new QGridLayout();    //그리드 레이아웃 선언
     QPushButton *button[25];    //세부 메뉴들 담을 버튼 선언
-    fileio file;    //file class 선언
+    //fileio file;    //file class 선언
     item_list LIST[25]; //item_list 구조체 배열 선언
 
     for(int i =0 ;i<25;i++){    //LIST struct array initailize
         LIST[i].item_name =" ";
     }
 
-    file.file_io2(LIST, location);  //file_io2 함수에 구조체 배열과 입력받은 주소 넘겨줌
+    //file.file_io2(LIST, location);  //file_io2 함수에 구조체 배열과 입력받은 주소 넘겨줌
+    get_item_info(LIST, num);
 
     int temp=0; //버튼의 위치를 임시로 저장할 변수 선언
     for(int i=0;i<5;i++){

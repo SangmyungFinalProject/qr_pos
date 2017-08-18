@@ -64,7 +64,7 @@ class qt_test : public QMainWindow
 public:
     qt_test(QWidget *parent = 0);
     void set_menu(Ui::qt_testClass ui);
-    void put_item(QWidget *Widget, QString location);
+    void put_item(QWidget *Widget, int num);
     void set_table();
     void display_ammount_price();
     void plus_table_qty(int row);
@@ -111,6 +111,7 @@ void sep_qr_price();
 QString dlsplay_success_log();
 void save_JSON_format();
 
-void DB_connect();
+bool DB_connect();
+void get_item_info(item_list *list, int num);
 
 #endif // QT_TEST_H

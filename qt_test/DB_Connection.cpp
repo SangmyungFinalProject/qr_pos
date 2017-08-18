@@ -1,7 +1,6 @@
 #include "qt_test.h"
 
-
-void DB_connect(){
+bool DB_connect(){
 
     qDebug() << QSqlDatabase::drivers();
 
@@ -14,20 +13,37 @@ void DB_connect(){
 
     if(!db.open()){
         qDebug("DB Connection error!");
-        return ;
+        return false;
     }
 
     qDebug("DB Connection OK!!!");
 
+    return true;
+}
+
+void get_item_info(item_list *list, int num){
+
+    //DB_connect();
+
+    int i=0;
+
     QSqlQuery query;
 
-    qDebug() << query.exec("select * from card_company_info");
+    qDebug() << query.exec(QString("select * from item_info where category=%1").arg(num));
 
     while(query.next()){
-        qDebug() << query.value(0).toInt();
         //qDebug() << query.value(1).toInt();
-        qDebug() << query.value(1).toString();
-        qDebug("\n");
+        //qDebug() << query.value(2).toString();
+        //qDebug() << query.value(3).toInt();
+        list[i].item_name = query.value(2).toString();
+        list[i].price = query.value(3).toInt();
+        list[i].item_amount = 30;
+        i++;
     }
-    qDebug("Done\n");
+
+    for(i;i<25;i++){
+        list[i].item_name =" ";
+    }
+
+    qDebug("put_item Done\n");
 }
