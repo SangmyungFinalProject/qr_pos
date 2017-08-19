@@ -148,9 +148,10 @@ void qt_test::on_set_fruit_clicked()
 //설명 : 메뉴 버튼이 눌렸을 때 표에 해당 물품을 넣는 슬롯 함수//
 void qt_test::input_item(QPushButton *button){
 
+
         QStringList tmpList = button->text().split("\n");   //버튼의 텍스트를 \n를 기준으로 구분하여 임시 배열에 저장
 
-        for(int i=0;i<=P_ROW;i++){  //P_ROW만큼 비교
+        for(int i=0;i<P_ROW;i++){  //P_ROW만큼 비교
             if(QString::compare(tmpList[0]," ")==0) //만약 메뉴버튼의 텍스트가 " "라면 -> 물품 정보가 없는 버튼이면
               //if(tmpList[0].toInt()==0)
                 return ;    //그대로 함수 종료
@@ -168,6 +169,9 @@ void qt_test::input_item(QPushButton *button){
         }
 
         display_ammount_price();    // 그 뒤 결과를 표에 반영한다.
+
+        qDebug()<<P_ROW;
+
 }
 
 //on_qty_up_button_pressed()                                 //
@@ -218,8 +222,8 @@ void qt_test::on_qty_down_button_clicked()
     }
     else{
         qDebug(str.toLatin1()); //해당 물품명 로그 찍고
-        minus_table_qty(row);   //해당 row에 갯수 1증가
-        minus_table_price(row); //해당 row에 가격 증가
+        minus_table_qty(row);   //해당 row에 갯수 1감소
+        minus_table_price(row); //해당 row에 가격 감소
     }
 
     display_ammount_price();    //그 뒤 결과를 반영한다.
@@ -412,11 +416,15 @@ bool qt_test::isTableSelect()
     return ui.sel_item_table->currentItem() > 0;
 }
 
+bool qt_test::isTableFull()
+{
+    return P_ROW == 10;
+}
 qt_test::~qt_test()
 {
-    free(I_list[0]);
-    free(I_list[1]);
-    free(I_list[2]);
+    //free(I_list[0]);
+    //free(I_list[1]);
+    //free(I_list[2]);
 }
 
 

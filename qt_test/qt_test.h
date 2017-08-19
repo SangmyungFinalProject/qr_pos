@@ -90,6 +90,7 @@ private slots:
     void set_qty(QWidget *change_qty, QLineEdit *line_edit, int row);
     void transfer_cancel_pay_no(QWidget *cancel_pay, QLineEdit * line_edit);
     bool isTableSelect();
+    bool isTableFull();
 
 private:
     Ui::qt_testClass ui;
