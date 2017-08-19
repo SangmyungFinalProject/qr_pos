@@ -10,7 +10,9 @@ extern string qr_code_str;
 qt_test::qt_test(QWidget *parent)
     : QMainWindow(parent)
 {
-    DB_connect();
+    if(!DB_connect()){
+        return ;
+    }
     ui.setupUi(this);
 
     set_menu(ui);
@@ -70,11 +72,11 @@ void qt_test::put_item(QWidget *Widget,int num){
     item_list LIST[25]; //item_list 구조체 배열 선언
 
     for(int i =0 ;i<25;i++){    //LIST struct array initailize
-        LIST[i].item_name =" ";
+        LIST[i].item_name =" "; //" "로 모든 item_name 초기화
     }
 
     //file.file_io2(LIST, location);  //file_io2 함수에 구조체 배열과 입력받은 주소 넘겨줌
-    get_item_info(LIST, num);
+    get_item_info(LIST, num);   //DB에서 물품 정보를 받아온다
 
     int temp=0; //버튼의 위치를 임시로 저장할 변수 선언
     for(int i=0;i<5;i++){
@@ -118,7 +120,7 @@ void qt_test::set_table(){
 
     for(int i=0;i<ROW;i++){
         for(int j=0;j<COLUMN;j++){
-            ui.sel_item_table->setItem(i,j,new QTableWidgetItem(" "));  // 표 전체를 " 로 초기화
+            ui.sel_item_table->setItem(i,j,new QTableWidgetItem(" "));  // 표 전체를 " "로 초기화
         }
     }
 }
@@ -134,12 +136,6 @@ void qt_test::on_payment_button_clicked()
         on_cancel_deal_button_clicked();    //거래 초기화 진행
 
 }
-
-/*
-void qt_test::set_item(){
-
-}
-*/
 
 // !실수로 Qt Designer 상에서 잘못 생성한 slot이라, 삭제시 오류 발생//
 void qt_test::on_set_fruit_clicked()
@@ -203,6 +199,10 @@ void qt_test::on_qty_up_button_pressed()
 //설명 : -버튼 누를 시 해당 row의 갯수와 금액을 감소시키는 slot 함수//
 void qt_test::on_qty_down_button_clicked()
 {
+    if (isTableSelect() == false) {
+        return;
+    }
+
     int row = ui.sel_item_table->currentRow();  //현재 선택된 row 저장
     QString str = ui.sel_item_table->item(row, 0)->text();  //그 row의 물품명 저장
     int Qty = ui.sel_item_table->item(row, 1)->text().toInt();  //그 row의 갯수 저장
@@ -229,6 +229,10 @@ void qt_test::on_qty_down_button_clicked()
 //설명 : 삭제 버튼 누를 시 해당 row를 지운다.//
 void qt_test::on_del_item_button_clicked()
 {
+    if (isTableSelect() == false) {
+        return;
+    }
+
     int row = ui.sel_item_table->currentRow();  //현재 선택된 row 저장
     QString str = ui.sel_item_table->item(row, 0)->text();  //그 row의 물품명 저장
 
@@ -261,6 +265,10 @@ void qt_test::on_cancel_deal_button_clicked()
 //설명 : 변경 버튼 누를 시 해당 row의 갯수를 변경한다.//
 void qt_test::on_change_qty_button_clicked()
 {
+    if (isTableSelect() == false) {
+        return;
+    }
+
     int row = ui.sel_item_table->currentRow();  //현재 선택된 row 저장
     QString str= ui.sel_item_table->item(row, 0)->text();   //그 row의 물품명 저장
 
@@ -320,7 +328,7 @@ void qt_test::on_cancel_pay_button_clicked()
 //set_qty(QWidget *change_qty, QLineEdit *line_edit, int row)//
 //설명 : 변경 값을 받은 뒤 실제로 표에 반영하는 슬롯함수           //
 void qt_test::set_qty(QWidget *change_qty, QLineEdit *line_edit, int row){
-    qDebug("test");
+
     int price = ui.sel_item_table->item(row,2)->text().toInt(); //현재 선택된 row의 금액 저장
     int qty = ui.sel_item_table->item(row,1)->text().toInt();   //현재 선택된 row의 갯수 저장
 
@@ -330,7 +338,7 @@ void qt_test::set_qty(QWidget *change_qty, QLineEdit *line_edit, int row){
     ui.sel_item_table->item(row,2)->setText(QString::number(price));    //현재 선택된 row의 금액을 price로 변경
 
     display_ammount_price();    //결과 반영
-    qDebug("finished");
+    qDebug("input item in table finished");
     change_qty->close();    //change_gty 위젯 닫기
 
 }

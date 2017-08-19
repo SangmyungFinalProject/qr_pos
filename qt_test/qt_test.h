@@ -112,6 +112,6 @@ QString dlsplay_success_log();
 void save_JSON_format();
 
 bool DB_connect();
-void get_item_info(item_list *list, int num);
+void get_item_info(item_list *list, int category_no);
 
 #endif // QT_TEST_H
