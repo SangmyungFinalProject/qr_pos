@@ -219,6 +219,10 @@ void qt_test::on_qty_down_button_clicked()
             ui.sel_item_table->removeRow(row);  //해당 row를 지우고
             P_ROW--;    //P_ROW 1 감소
             ui.sel_item_table->setRowCount(ROW);    //표의 row count를 다시 초기화
+
+            for(int i=0;i<COLUMN;i++){
+                ui.sel_item_table->setItem(ROW-1,i,new QTableWidgetItem(" "));  // 새로 추가된 행을 " "로 초기화
+            }
     }
     else{
         qDebug(str.toLatin1()); //해당 물품명 로그 찍고
@@ -248,6 +252,10 @@ void qt_test::on_del_item_button_clicked()
         ui.sel_item_table->removeRow(row);  //해당 row 지우고
         P_ROW--;    //P_ROW 1 감소
         ui.sel_item_table->setRowCount(ROW);    //표의 row count를 다시 초기화
+
+        for(int i=0;i<COLUMN;i++){
+            ui.sel_item_table->setItem(ROW-1,i,new QTableWidgetItem(" "));  // 새로 추가된 행을 " "로 초기화
+        }
     }
 
     display_ammount_price(); // 그 뒤 결과를 반영한다.
