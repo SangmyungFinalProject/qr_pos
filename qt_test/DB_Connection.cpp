@@ -7,7 +7,7 @@ bool DB_connect(){
     qDebug() << QSqlDatabase::drivers();    //DB 드라이버 설치 유무를 확인
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");  //MYSQL과 연결하기 위해 QSqlDatabase을 정의한다.
-    db.setHostName("13.124.113.193");
+    db.setHostName("13.124.174.11");
     db.setPort(3306);
     db.setDatabaseName("qrpay");
     db.setUserName("root");
