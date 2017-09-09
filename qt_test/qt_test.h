@@ -35,11 +35,12 @@
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
+#include <QStyle>
+#include <QDesktopWidget>
 
 using namespace cv;
 using namespace std;
 using namespace zbar;
-
 
 //로컬 파일에서 불러온 세부 물품을 저장할 구조체 선언
 struct item_list{
@@ -103,13 +104,14 @@ public:
     void file_io2(item_list *list, QString location);
 };
 
-int qr_scan();
+bool qr_scan();
 void getRequest();
-QString postRequest();
-QString cancel_post_request(QString cancel_pay_no);
+int pay_post_Request();
+int cancel_post_Request(QString cancel_pay_no);
 string current_time();
 void sep_qr_price();
-QString dlsplay_success_log();
+int display_success_log();
+int display_pay_status_log(int mode, int code);
 void save_JSON_format();
 
 bool DB_connect();

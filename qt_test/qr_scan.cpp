@@ -5,7 +5,7 @@ string qr_code_str="";  //QR 코드 스캔한 값을 저장할 string을 전역�
 
 //int qr_scan()                                         //
 //설명 : QR 코드 캡쳐하는 화면, OpenCV와 Zbar 라이브러리 사용//
-int qr_scan()
+bool qr_scan()
 {
    VideoCapture vc(0); // 0번 카메라 선택
    // cap.set(CV_CAP_PROP_FRAME_WIDTH,800); //화면 너비 조정
@@ -13,7 +13,7 @@ int qr_scan()
    if (!vc.isOpened()) // 만약 카메라 연결이 안되었을 경우 에러 처리
    {
       cout << "Cannot open the video cam" << endl;
-      return -1;
+      return false;
    }
 
    ImageScanner scanner;
@@ -79,7 +79,7 @@ int qr_scan()
 
         cvDestroyAllWindows();
 
-        return 0;
+        return true;
      }
 
      imshow("QR Reader", frame); //화면에 카메라 윈도우 표시
@@ -88,9 +88,9 @@ int qr_scan()
      {
          cout << "esc key is pressed by user" << endl;
          cvDestroyAllWindows();
-         break;
+         return false;
      }
 
    }
-   return 0;
+   return true;
 }

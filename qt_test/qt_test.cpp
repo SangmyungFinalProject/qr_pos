@@ -1,6 +1,6 @@
 #include "qt_test.h"
 
-unsigned int CATEGORY_NO=0; //
+unsigned int CATEGORY_NO=0; //카테고리 총 갯수 저장하는 변수
 unsigned int P_ROW=0;   //현재 표에 어느 row까지 입력되었는지 반영하기 위한 전역 변수
 int TOTAL_PRICE=0;  //총 금액을 저장할 전역변수 선언
 
@@ -129,11 +129,12 @@ void qt_test::set_table(){
 //설명 : 결제버튼이 눌렸을 경우 동작되는 슬롯 함수//
 void qt_test::on_payment_button_clicked()
 {
-    qr_scan();  //QR코드 스캔
-    save_JSON_format(); //입력 받은 값을 구조체에 분리
-    QString check = postRequest(); //서버로 POST 실행
-    if(QString::compare(check,"1") ==0) //포스트 결과 이상이 없다면
-        on_cancel_deal_button_clicked();    //거래 초기화 진행
+    if(qr_scan()){  //QR코드 스캔
+        save_JSON_format(); //입력 받은 값을 구조체에 분리
+
+        if(pay_post_Request()==0) //서버로 POST 실행, 포스트 결과 이상이 없다면
+             on_cancel_deal_button_clicked();    //거래 초기화 진행
+    }
 
 }
 
@@ -305,6 +306,8 @@ void qt_test::on_change_qty_button_clicked()
 
         change_qty->setLayout(layout);  //change_qty 위젯에 레이아웃 반영
 
+        change_qty->move(QApplication::desktop()->rect().center()); //화면 중앙 정렬
+
         change_qty->show(); //화면에 change_qty 표시
 
 
@@ -331,6 +334,7 @@ void qt_test::on_cancel_pay_button_clicked()
 
     cancel_pay->setLayout(layout);
 
+    cancel_pay->move(QApplication::desktop()->screen()->rect().center()); //화면 중앙 정렬
     cancel_pay->show();
 
     connect(button, &QPushButton::clicked, [=]{transfer_cancel_pay_no(cancel_pay, line_edit);});
@@ -363,7 +367,7 @@ void qt_test::transfer_cancel_pay_no(QWidget *cancel_pay, QLineEdit * line_edit)
     cancel_pay->close();
     qDebug("input finish");
 
-    cancel_post_request(cancel_pay_no);
+    cancel_post_Request(cancel_pay_no);
 }
 
 //display_ammount_price()                            //

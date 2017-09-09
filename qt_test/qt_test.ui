@@ -181,7 +181,7 @@
       </font>
      </property>
      <property name="text">
-      <string>결제 삭제</string>
+      <string>결제 취소</string>
      </property>
     </widget>
     <widget class="QPushButton" name="qty_up_button">
