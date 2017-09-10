@@ -203,7 +203,7 @@ string current_time()
     string time_arr;
     now=time(NULL); //현재 시간 저장
     printf("%ld\n",now);
-    sprintf(buf, "%ld",now);
+    sprintf(buf, "%ld000",now);
 
     return buf;
 
